@@ -27,7 +27,6 @@ import threading
 import subprocess
 import time
 import datetime
-from keep_alive import keep_alive
 from random import randint
 from threading import Thread
 from time import sleep
@@ -154,6 +153,3 @@ base64.b64decode(a)
 
 
 client.run(Token, bot=False)
-
-keep_alive()
-run_onliner()
