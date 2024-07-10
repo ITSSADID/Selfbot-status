@@ -41,7 +41,7 @@ colorama.init()
 
 #----------- MAIN ------- #
 
-Token = input("{}({} SELFBOT {}) INPUT ACCOUNT TOKEN {}:{} ".format(Fore.RESET, "\x1b[38;5;21m", Fore.RESET, "\x1b[38;5;21m", Fore.RESET))
+Token = input("TOKEN")
 prefix = ">"
 
 client = commands.Bot(command_prefix=prefix, self_bot=True, case_insensitive=True, intents=discord.Intents.all())
